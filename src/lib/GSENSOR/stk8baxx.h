@@ -6,7 +6,7 @@ class STK8xxx
 {
 private:
     void ReadAccRegister(uint8_t reg, uint8_t *data);
-    void WriteAccRegister(uint8_t reg, uint8_t data);
+    void WriteAccRegister(uint8_t reg, uint8_t data, bool end = false);
     void STK8xxx_Suspend_mode();
     bool STK8xxx_Check_chipid();
 public:

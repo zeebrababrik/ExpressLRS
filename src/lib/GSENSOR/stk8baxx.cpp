@@ -11,18 +11,18 @@ void STK8xxx::ReadAccRegister(uint8_t reg, uint8_t *data)
 {
     Wire.beginTransmission(STK8xxx_SLAVE_ADDRESS);
     Wire.write(reg);
-    Wire.endTransmission();
+    Wire.endTransmission(false);
 
     Wire.requestFrom(STK8xxx_SLAVE_ADDRESS, 1);    // request 1 bytes from slave device
     *data = Wire.read(); // receive a byte
 }
 
-void STK8xxx::WriteAccRegister(uint8_t reg, uint8_t data)
+void STK8xxx::WriteAccRegister(uint8_t reg, uint8_t data, bool end)
 {
     Wire.beginTransmission(STK8xxx_SLAVE_ADDRESS);
     Wire.write(reg);
     Wire.write(data);
-    Wire.endTransmission();
+    Wire.endTransmission(end);
 }
 
 /*
@@ -52,7 +52,7 @@ void STK8xxx::STK8xxx_Anymotion_init()
 	/* Map any-motion (slope) interrupt to INT1 */
     ARegAddr       = STK8xxx_REG_INTMAP1;
     ARegWriteValue = STK8xxx_VAL_ANYMOT2INT1;
-    WriteAccRegister(ARegAddr, ARegWriteValue);
+    WriteAccRegister(ARegAddr, ARegWriteValue, true);
 }
 
 /*
@@ -102,7 +102,7 @@ void STK8xxx::STK8xxx_Disable_Motion()
 	/* Disable motion */
     ARegAddr       = STK8xxx_REG_SIGMOT2;
     ARegWriteValue = 0x00;
-    WriteAccRegister(ARegAddr, ARegWriteValue);
+    WriteAccRegister(ARegAddr, ARegWriteValue, true);
 }
 
 
@@ -114,7 +114,7 @@ void STK8xxx::STK8xxx_Suspend_mode()
     /* suspend mode enable */
 	RegAddr       = STK8xxx_REG_POWMODE;
     RegWriteValue = STK8xxx_VAL_SUSPEND;
-    WriteAccRegister(RegAddr, RegWriteValue);
+    WriteAccRegister(RegAddr, RegWriteValue, true);
 }
 
 bool STK8xxx::STK8xxx_Check_chipid()
@@ -182,7 +182,7 @@ int STK8xxx::STK8xxx_Initialization()
     /* int config */
     RegAddr       = STK8xxx_REG_INTCFG1;
     RegWriteValue = STK8xxx_VAL_INT_LV; // INT1/INT2 push-pull, active high
-    WriteAccRegister(RegAddr, RegWriteValue);
+    WriteAccRegister(RegAddr, RegWriteValue, true);
 
 	return chipid_temp;
 }
